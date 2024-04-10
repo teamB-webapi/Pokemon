@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Shop</title>
+    <script>
+        async function displayPokemons(){
+            try{
+                let pokemonsElement = document.querySelector("#pokemons");
+                let p_ele = document.createElement("p");
+                let response = await fetch("/api/pokemons/");
+                let data = await response.json();
+                console.log(data);
+                p_ele.innerHTML = data;
+                pokemonsElement.append(p_ele);
+            }catch(error){
+                console.log("Error: ", error);
+            }
+            
+        }
+        //ブラウザが読み込まれたら実行
+        window.onload = function(){
+            displayPokemons();
+        }
+    </script>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <div id="pokemons"></div>
+</body>
+</html>
