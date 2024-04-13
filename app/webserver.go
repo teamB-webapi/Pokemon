@@ -22,7 +22,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 func apiPokemonHandler(w http.ResponseWriter, _ *http.Request) {
 	// TODO: 変数pokemonDataには機能１である関数を実行してポケモンの構造体配列を返す
 	pokemonData := sum()
-	json.NewEncoder(w).Encode(pokemonData)
+
 	// jsonにエンコードする
 	jsonData, err := json.Marshal(pokemonData)
 	if err != nil {

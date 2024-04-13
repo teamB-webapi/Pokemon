@@ -25,15 +25,12 @@ type Pokemon struct{
 }
 
 type Abilitiesinfo struct{
-	Ability Abilityinfo `json:"ability"`
+	Ability Item `json:"ability"`
 	//もし'is_hidden'や'slot'がほしければここに追加
 }
 
 
-type Abilityinfo struct{
-	Name string `json:"name"`
-	URL string `json:"url"`
-}
+
 
 type Item struct{
 	Name string `json:"name"`
@@ -103,6 +100,7 @@ func sum() []Pokemon{
 }
 
 //urlを取得してその中から必要なデータを持ってくる。
+
 
 func statusHandler(url, name string) Pokemon {
 	resp, err := http.Get(url)
