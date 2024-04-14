@@ -8,102 +8,159 @@ import (
 
 	"strconv"
 )
-const limit int = 50
+//何個取得してシャッフルするか
+const limit int = 100
+//javascriptに送る数
+const sent int = 50
 
-// テスト用のために作成
-func sum() int {
-	return rand.Intn(100)
-}
 
 // 機能１ポケモンデータを取ってきて必要なフィールだけを持った構造体に格納した上で配列にプッシュ。配列を返す
 
 type Pokemon struct{
-	Name string
+	Name string 
 	Height float64
 	Weight float64
-	Skill string
+	Ability string
 	Imgurl string
 }
 
-type Item struct{
-	Name int `json:"name"`
-	URL string `json:"url"`
-	Next string `json:"next"`
+type Abilitiesinfo struct{
+	Ability Item `json:"ability"`
+	//もし'is_hidden'や'slot'がほしければここに追加
+}
+
+//正面の画像
+type Sprit struct{
+	Frontdefault string `json:"front_default"`
 }
 
 
 
-var pokemonlist []Pokemon
+
+type Item struct{
+	Name string `json:"name"`
+	URL string `json:"url"`
+}
 
 
-func allgetHandler(w http.ResponseWriter, r*http.Request){
-	
-	query := r.URL.Query()
-	offset := query.Get("offset")
-	if offset == ""{
-		offset = "0"
-	}
 
+
+
+
+func sum() []Pokemon{
+
+	var pokemonlist []Pokemon
+	// query := r.URL.Query()
+	// offset := query.Get("offset")
+	// if offset == ""{
+	// 	offset = "0"
+	// }
+	offset := "0"
+	//offsetをランダムにしたらもっと幅広く取得できるかも。その代わりcountを取得するか定数(1302)を用いなければいけない。
+	//offset = rand.Intn(count-limit)
 	url := "https://pokeapi.co/api/v2/pokemon/?offset=" + offset + "&limit=" + strconv.Itoa(limit)
 
+		
+
 	resp, err := http.Get(url)
+
 	if err != nil{
 		//javascriptにエラーを送る
 		fmt.Println("error")
-		return
+
 	}
 	defer resp.Body.Close()
 
 	var response struct {
 		Results []Item `json:"results"`
+		//すべてを取得するときには必要だけどなくてもいいかも
+		Next string `json:"next"`
+
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		fmt.Println("Failed to decode JSON:", err)
-		return
+
 	}
+
 
 	// レスポンスの配列に含まれる各要素を表示
 	for _, item := range response.Results {
-		fmt.Println("Name:", item.Name)
-		fmt.Println("URL:", item.URL)
+		pokemon := statusHandler(item.URL, item.Name)
+
+
+		pokemonlist = append(pokemonlist, pokemon)
+
 	}
-	fmt.Println("URL:")
-
-	//必要なデータを持ってくる関数を呼び出す
-
-
-	//持ってきたデータをpokemonlistにいれる
-
-
-	//returnする
+	// url = response.Next
 
 
 	
+
+	pokemonlist = shuffle(pokemonlist)
+
+	//returnする
+    // Content-Typeヘッダーをapplication/jsonに設定
+    return pokemonlist[:sent]
+
 }
 
 //urlを取得してその中から必要なデータを持ってくる。
 
-// func statusHandler(url, name string){
-// 	resp, err := http.Get(url)
-// 	if err != nill{
-// 		//falseを返すもしくは空を返す
-// 		return
-// 	}
-// 	defer resp.Body.Closse()
-// 	//urlから名前以外の情報を取得
-// 	pokemon := Pokemon(name, height, weight, skill, imgurl)
-// 	return pokemon
-// }
 
-// func main() {
-//     fmt.Println("Starting the server!")
-    
-//     // ルートとハンドラ関数を定義
-//     http.HandleFunc("/api/v2/pokemon/", allgetHandler)
+func statusHandler(url, name string) Pokemon {
+	resp, err := http.Get(url)
+	if err != nil{
+		fmt.Println("error")
 
-//     // 8000番ポートでサーバを開始
-//     http.ListenAndServe(":8000", nil)
-// }
+	}
+	defer resp.Body.Close()
+	//urlから名前以外の情報を取得
+
+	var response struct{
+		Abilities []Abilitiesinfo `json:"abilities"`
+		Height float64 `json:"height"`
+		Weight float64 `json:"weight"`
+		//画像の取得
+		Sprites Sprit `json:"sprites"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		fmt.Println("Failed to decode JSON:", err)
+		fmt.Println("response")
+
+	}
+
+	var skill string
+	//技が一つもないことも考えないといけないかも(if文で)
+	if len(response.Abilities) == 0{
+		fmt.Println("null")
+		skill = "null"
+	}else{
+		ability := response.Abilities[0].Ability
+		skill = ability.Name
+	}
+	
+	var pokemon Pokemon
+	pokemon.Name = name
+	pokemon.Ability = skill
+	pokemon.Height = response.Height
+	pokemon.Weight = response.Weight
+	pokemon.Imgurl = response.Sprites.Frontdefault
+	return pokemon
+}
+
+func shuffle(arr []Pokemon) []Pokemon{
+	for i := 0; i < len(arr); i++{
+		r := rand.Intn(len(arr)-i) + i
+
+
+		temp := arr[r]
+		arr[r] = arr[i]
+		arr[i] = temp
+	}
+	return arr
+}
+
+
 
 
 
