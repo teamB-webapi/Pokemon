@@ -153,15 +153,7 @@ func shuffle(arr []Pokemon) []Pokemon{
 	return arr
 }
 
-// func main() {
-//     fmt.Println("Starting the server!")
-    
-//     // ルートとハンドラ関数を定義
-//     http.HandleFunc("/api/v2/pokemon/", allgetHandler)
 
-//     // 8000番ポートでサーバを開始
-//     http.ListenAndServe(":8000", nil)
-// }
 
 
 

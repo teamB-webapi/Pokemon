@@ -40,3 +40,4 @@ func StartWebServer() error {
 
 	return http.ListenAndServe(":8080", nil)
 }
+
