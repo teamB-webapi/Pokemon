@@ -22,12 +22,14 @@ type Pokemon struct{
 	Weight float64
 	Ability string
 	Imgurl string
+
 }
 
 type Abilitiesinfo struct{
 	Ability Item `json:"ability"`
 	//もし'is_hidden'や'slot'がほしければここに追加
 }
+
 
 //正面の画像
 type Sprit struct{
@@ -40,7 +42,10 @@ type Sprit struct{
 type Item struct{
 	Name string `json:"name"`
 	URL string `json:"url"`
+
 }
+
+
 
 
 
@@ -120,8 +125,10 @@ func statusHandler(url, name string) Pokemon {
 		Abilities []Abilitiesinfo `json:"abilities"`
 		Height float64 `json:"height"`
 		Weight float64 `json:"weight"`
+
 		//画像の取得
 		Sprites Sprit `json:"sprites"`
+
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		fmt.Println("Failed to decode JSON:", err)
@@ -145,6 +152,7 @@ func statusHandler(url, name string) Pokemon {
 	pokemon.Height = response.Height
 	pokemon.Weight = response.Weight
 	pokemon.Imgurl = response.Sprites.Frontdefault
+
 	return pokemon
 }
 
