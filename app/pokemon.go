@@ -47,7 +47,7 @@ type Item struct{
 
 
 
-func sum() []Pokemon{
+func getPokemon() []Pokemon{
 
 	var pokemonlist []Pokemon
 	// query := r.URL.Query()
