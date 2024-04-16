@@ -53,7 +53,7 @@ type Item struct{
 
 
 func sum() []Pokemon{
-
+	var namelist []Item
 	var pokemonlist []Pokemon
 	// query := r.URL.Query()
 	// offset := query.Get("offset")
@@ -158,7 +158,7 @@ func statusHandler(url, name string) Pokemon {
 
 func shuffle(arr []Pokemon) []Pokemon{
 	for i := 0; i < len(arr); i++{
-		r := rand.Intn(len(arr)-i) + i
+		r := rand.Intn(len(arr)-1-i) + i
 
 
 		temp := arr[r]
