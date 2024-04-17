@@ -22,6 +22,7 @@ type Pokemon struct{
 	Weight float64
 	Ability string
 	Imgurl string
+
 }
 
 type Abilitiesinfo struct{
@@ -35,11 +36,18 @@ type Sprit struct{
 }
 
 
+//正面の画像
+type Sprit struct{
+	Frontdefault string `json:"front_default"`
+}
+
+
 
 
 type Item struct{
 	Name string `json:"name"`
 	URL string `json:"url"`
+
 }
 
 
@@ -47,8 +55,10 @@ type Item struct{
 
 
 
-func getPokemon() []Pokemon{
 
+
+func getPokemon() []Pokemon{
+	var namelist []Item
 	var pokemonlist []Pokemon
 	// query := r.URL.Query()
 	// offset := query.Get("offset")
@@ -120,8 +130,11 @@ func statusHandler(url, name string) Pokemon {
 		Abilities []Abilitiesinfo `json:"abilities"`
 		Height float64 `json:"height"`
 		Weight float64 `json:"weight"`
+
+
 		//画像の取得
 		Sprites Sprit `json:"sprites"`
+
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		fmt.Println("Failed to decode JSON:", err)
@@ -145,12 +158,13 @@ func statusHandler(url, name string) Pokemon {
 	pokemon.Height = response.Height
 	pokemon.Weight = response.Weight
 	pokemon.Imgurl = response.Sprites.Frontdefault
+
 	return pokemon
 }
 
 func shuffle(arr []Pokemon) []Pokemon{
 	for i := 0; i < len(arr); i++{
-		r := rand.Intn(len(arr)-i) + i
+		r := rand.Intn(len(arr)-1-i) + i
 
 
 		temp := arr[r]
