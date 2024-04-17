@@ -30,6 +30,11 @@ type Abilitiesinfo struct{
 	//もし'is_hidden'や'slot'がほしければここに追加
 }
 
+//正面の画像
+type Sprit struct{
+	Frontdefault string `json:"front_default"`
+}
+
 
 //正面の画像
 type Sprit struct{
@@ -52,7 +57,7 @@ type Item struct{
 
 
 
-func sum() []Pokemon{
+func getPokemon() []Pokemon{
 	var namelist []Item
 	var pokemonlist []Pokemon
 	// query := r.URL.Query()
@@ -125,6 +130,7 @@ func statusHandler(url, name string) Pokemon {
 		Abilities []Abilitiesinfo `json:"abilities"`
 		Height float64 `json:"height"`
 		Weight float64 `json:"weight"`
+
 
 		//画像の取得
 		Sprites Sprit `json:"sprites"`
