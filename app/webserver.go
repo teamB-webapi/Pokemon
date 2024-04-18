@@ -42,7 +42,7 @@ func APIError(w http.ResponseWriter, errMessage string, code int){
 
 func apiPokemonHandler(w http.ResponseWriter, _ *http.Request) {
 	// TODO: 変数pokemonDataには機能１である関数を実行してポケモンの構造体配列を返す
-	pokemonData := sum()
+	pokemonData := getPokemon()
 
 	// jsonにエンコードする
 	jsonData, err := json.Marshal(pokemonData)
@@ -83,3 +83,4 @@ func StartWebServer() error {
 
 	return http.ListenAndServe(":8080", nil)
 }
+
