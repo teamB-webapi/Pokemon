@@ -29,12 +29,6 @@ type Sprit struct{
 }
 
 
-//正面の画像
-type Sprit struct{
-	Frontdefault string `json:"front_default"`
-}
-
-
 
 
 type Item struct{
@@ -154,7 +148,7 @@ func statusHandler(url, name string) Pokemon {
 
 func shuffle(arr []Pokemon) []Pokemon{
 	for i := 0; i < len(arr); i++{
-		r := rand.Intn(len(arr)-1-i) + i
+		r := rand.Intn(len(arr)-i) + i
 
 
 		temp := arr[r]
