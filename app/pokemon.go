@@ -13,9 +13,9 @@ import (
 
 )
 //何個取得してシャッフルするか
-const limit int = 100
+const limit int = 30
 //javascriptに送る数
-const sent int = 50
+const sent int = 10
 
 
 type Abilitiesinfo struct{
@@ -27,13 +27,6 @@ type Abilitiesinfo struct{
 type Sprit struct{
 	Frontdefault string `json:"front_default"`
 }
-
-
-//正面の画像
-type Sprit struct{
-	Frontdefault string `json:"front_default"`
-}
-
 
 
 
@@ -48,7 +41,7 @@ type Item struct{
 
 
 func getPokemon() []Pokemon{
-	var namelist []Item
+
 	var pokemonlist []Pokemon
 	// query := r.URL.Query()
 	// offset := query.Get("offset")
@@ -118,8 +111,8 @@ func statusHandler(url, name string) Pokemon {
 
 	var response struct{
 		Abilities []Abilitiesinfo `json:"abilities"`
-		Height float64 `json:"height"`
-		Weight float64 `json:"weight"`
+		Height int `json:"height"`
+		Weight int `json:"weight"`
 
 
 		//画像の取得
@@ -147,14 +140,14 @@ func statusHandler(url, name string) Pokemon {
 	pokemon.Ability = skill
 	pokemon.Height = response.Height
 	pokemon.Weight = response.Weight
-	pokemon.Imgurl = response.Sprites.Frontdefault
+	pokemon.Sprite = response.Sprites.Frontdefault
 
 	return pokemon
 }
 
 func shuffle(arr []Pokemon) []Pokemon{
 	for i := 0; i < len(arr); i++{
-		r := rand.Intn(len(arr)-1-i) + i
+		r := rand.Intn(len(arr)-i) + i
 
 
 		temp := arr[r]
@@ -441,16 +434,6 @@ type PokemonOrigin struct {
 		} `json:"types,omitempty"`
 	} `json:"past_types,omitempty"`
 }
-
-// ポケモンのAbilities は構造体を持つ配列。Abilityはその１要素である構造体のフィールドの1つ
-// Abilities      []struct {
-// 	IsHidden bool `json:"is_hidden,omitempty"`
-// 	Slot     int  `json:"slot,omitempty"`
-// 	Ability  struct {
-// 		Name string `json:"name,omitempty"`
-// 		URL  string `json:"url,omitempty"`
-// 	} `json:"ability,omitempty"`
-// } `json:"abilities,omitempty"`
 
 type Pokemon struct{
 	Name           string `json:"name,omitempty"`

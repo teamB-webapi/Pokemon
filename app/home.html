@@ -3,30 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokemon Shop</title>
-    <script>
-        async function displayPokemons(){
-            try{
-                let pokemonsElement = document.querySelector("#pokemons");
-                let p_ele = document.createElement("p");
-                let response = await fetch("/api/pokemons/");
-                let data = await response.json();
-                console.log(data);
-                p_ele.innerHTML = data;
-                pokemonsElement.append(p_ele);
-            }catch(error){
-                console.log("Error: ", error);
-            }
-            
+    <title>Pokemon Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
-        //ブラウザが読み込まれたら実行
-        window.onload = function(){
-            displayPokemons();
+        
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
         }
-    </script>
+        
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        #pokemon-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .pokemon-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pokemon-card img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <div id="pokemons"></div>
+    <h1>Select a Color and View Pokemon</h1>
+    <form id="colorForm">
+        <input type="radio" id="red" name="color" value="0">
+        <label for="red">Red</label><br>
+        <input type="radio" id="green" name="color" value="1">
+        <label for="green">Green</label><br>
+        <input type="radio" id="blue" name="color" value="2">
+        <label for="blue">Blue</label><br>
+        <button type="submit">Submit</button>
+    </form>
+    
+    <h2>Pokemon List</h2>
+    <div id="pokemon-container"></div>
+
+    <script>
+        document.getElementById('colorForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // フォームのデフォルトの送信を防ぐ
+        
+            const formData = new FormData(event.target);
+            const selectedColor = formData.get('color');
+
+            fetch(`/api/pokemons_color/${selectedColor}/`, {  // URLに選択された色を含める
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ color: selectedColor })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                displayPokemon(data);  // ポケモンデータを表示する関数を呼び出す
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        async function fetchPokemons(){
+            try{
+                const response = await fetch('/api/pokemons/');
+                const pokemons = await response.json();
+        
+                if(pokemons == null) return ;
+        
+                displayPokemon(pokemons);
+                    
+            }catch(error){
+                console.log(error);
+            }
+
+        }
+        
+        function displayPokemon(pokemonArray) {
+            const container = document.getElementById('pokemon-container');
+            container.innerHTML = '';  // 既存のデータをクリア
+        
+            pokemonArray.forEach(pokemon => {
+                const pokemonDiv = document.createElement('div');
+                pokemonDiv.classList.add('pokemon-card'); // CSS用のクラスを追加
+                pokemonDiv.innerHTML = `
+                    <h3>${pokemon.name}</h3>
+                    <p>Height: ${pokemon.height}</p>
+                    <p>Weight: ${pokemon.weight}</p>
+                    <p>Ability: ${pokemon.ability}</p>
+                    <img src="${pokemon.sprite}" alt="Sprite of ${pokemon.name}">
+                `;
+                container.appendChild(pokemonDiv);
+            });
+        }
+        
+        window.onload = function(){
+            fetchPokemons();
+        }
+
+    </script>
 </body>
 </html>
