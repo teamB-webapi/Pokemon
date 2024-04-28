@@ -47,4 +47,5 @@ go run main.go
 
 ## チームメンバー
 - [REI](https://github.com/ReiNagahashi)
+- [kolomame](https://github.com/kolomame)
 - [nyantarou](https://github.com/nyantarou2001002)
