@@ -3,7 +3,7 @@
 ランダムな10体のポケモンの名前、技、画像を表示するアプリです。
 
 ## DEMO
-Uploading 無題の動画 ‐ Clipchampで作成.mp4…
+[Uploading 無題の動画 ‐ Clipchampで作成.mp4…](https://github.com/teamB-webapi/Pokemon/assets/116293482/2dd630cb-d3d2-46c9-931c-db4b689a2b61)
 
 
 ## 使用技術
